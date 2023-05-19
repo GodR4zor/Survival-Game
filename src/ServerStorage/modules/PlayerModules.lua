@@ -4,7 +4,7 @@ local PlayerModule = {}
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
 local SS = game:GetService("ServerStorage")
-
+local RP = game:GetService("ReplicatedStorage")
 
 
 --Members
@@ -12,6 +12,8 @@ local playerCached = {} ---Dicionário com todos os jogadores no server
 local database = DataStoreService:GetDataStore("Survival")
 local PlayerLoaded:BindableEvent = SS.BindableEvents.PlayerLoaded
 local PlayerUnloaded:BindableEvent = SS.BindableEvents.PlayerUnloaded
+local HungerUiUpdate:RemoteEvent =  RP.network.HungerUiUpdate
+local MiningUiUpdate:RemoteEvent = RP.network.MiningUiUpdate
 
 local PLAYER_DATA_DEFAULT = {
     hunger = 100,
@@ -77,6 +79,9 @@ local function onPlayerAdded(player:Player)
         playerCached[player.UserId] = data
 
         --Player Loaded
+        HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
+        MiningUiUpdate:FireClient(player, PlayerModule.GetInventory(player))
+        
         PlayerLoaded:Fire(player)
 
     end)

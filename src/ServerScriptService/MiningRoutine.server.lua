@@ -8,6 +8,7 @@ local MININGOBJECT = "Mining"
 local MINING_SOUND_ID = "rbxassetid://966898639"
 
 --Members
+local MiningUiUpdate:RemoteEvent = RP.network.MiningUiUpdate
 local PlayerModule = require(SS.modules.PlayerModules)
 local Animation:Animation = Instance.new("Animation")
 Animation.AnimationId = "rbxassetid://13469952207"
@@ -37,6 +38,8 @@ local function onPromptTrigered(promptObject:ProximityPrompt, player)
     local miningValue = miningModel:FindFirstChildWhichIsA("NumberValue")
 
     PlayerModule.AddToInvetory(player, miningValue.Name, miningValue.Value)
+
+    MiningUiUpdate:FireClient(player, PlayerModule.GetInventory(player))
 
     print(PlayerModule.GetInventory(player))
 
