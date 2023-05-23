@@ -8,10 +8,10 @@ local MININGOBJECT = "Mining"
 local MINING_SOUND_ID = "rbxassetid://966898639"
 
 --Members
-local MiningUiUpdate:RemoteEvent = RP.network.MiningUiUpdate
-local PlayerModule = require(SS.modules.PlayerModules)
+local PlayerInventoryUpdate:RemoteEvent = RP.network.PlayerInventoryUpdate
+local PlayerModule = require(RP.modules.PlayerModules)
 local Animation:Animation = Instance.new("Animation")
-Animation.AnimationId = "rbxassetid://13469952207"
+Animation.AnimationId = "rbxassetid://13529888796"
 local isRuning = false
 
 local function onSoundMining()
@@ -34,16 +34,25 @@ local function onPromptTrigered(promptObject:ProximityPrompt, player)
         return
     end
     
-    local miningModel = promptObject.Parent
+    local miningModel:Model = promptObject.Parent
+    local miningCFrame = miningModel.PrimaryPart.CFrame
+    local miningClone:Model = miningModel:Clone()
     local miningValue = miningModel:FindFirstChildWhichIsA("NumberValue")
+    local miningFolder = miningModel.Parent
 
     PlayerModule.AddToInvetory(player, miningValue.Name, miningValue.Value)
 
-    MiningUiUpdate:FireClient(player, PlayerModule.GetInventory(player))
+    PlayerInventoryUpdate:FireClient(player, PlayerModule.GetInventory(player))
 
-    print(PlayerModule.GetInventory(player))
 
     miningModel:Destroy()
+
+    delay(5, function()
+        print("Cheguei Aqui!")
+        miningClone.Parent = miningFolder
+        miningClone.PrimaryPart.CFrame = miningCFrame
+    end)
+
 end
 
 local function onPromptHoldBegan(promptObject:ProximityPrompt, player:Player)
@@ -59,12 +68,17 @@ local function onPromptHoldBegan(promptObject:ProximityPrompt, player:Player)
     local humanoidAnimator:Animator = humanoid.Animator
     local animationTrack = humanoidAnimator:LoadAnimation(Animation)
 
+    local startTime = os.clock()
+
     while isRuning do
         onSoundMining()
-        --Executa a animação com delay de 0.5
-        animationTrack:Play(nil, nil, 1)
-        wait(1)
+        local elapsedTime = os.clock() - startTime
+        animationTrack:Play(nil, nil, 0.5 + elapsedTime * 0.1)
+        wait(4)
+
     end
+
+
 
     
 end

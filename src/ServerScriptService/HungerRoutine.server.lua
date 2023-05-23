@@ -4,16 +4,25 @@ local SS = game:GetService("ServerStorage")
 local RP = game:GetService("ReplicatedStorage")
 
 --Members
-local PlayerModule = require(SS.modules.PlayerModules)
+local PlayerModule = require(RP.modules.PlayerModules)
 local PlayerUnloaded:BindableEvent = SS.BindableEvents.PlayerUnloaded
 local PlayerLoaded:BindableEvent = SS.BindableEvents.PlayerLoaded
 local HungerUiUpdate:RemoteEvent = RP.network.HungerUiUpdate
+local PlayerDead:RemoteEvent = RP.network.PlayerDead
 
 local CORE_LOOP_INTERVAL = 3
 local HUNGER_TIME = 1
+local PLAYER_PUNISHIMENT = 0.1
+local runningCoreLoops = {}
 
 --Functions
 local function coreloop(player: Player)
+    if runningCoreLoops[player] then
+        return -- A coreloop já está em execução para esse jogador
+    end
+
+    runningCoreLoops[player] = true
+
     local isRuning = true
     PlayerUnloaded.Event:Connect(function(playerUnloaded:Player)
         if playerUnloaded == player then
@@ -22,7 +31,6 @@ local function coreloop(player: Player)
     end)
 
     HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
-    wait(2)
     while true do
         if not isRuning then
             break
@@ -33,8 +41,22 @@ local function coreloop(player: Player)
         PlayerModule.SetHunger(player, hunger - HUNGER_TIME)
 
         --Hunger Update
-        HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
        
+        if PlayerModule.GetHunger(player) <= 0 then
+
+            PlayerDead:FireClient(player)
+        
+            local inventory = PlayerModule.GetInventory(player)
+        
+            inventory.Stone = math.floor(inventory.Stone - (inventory.Stone * PLAYER_PUNISHIMENT))
+            inventory.Copper = math.floor(inventory.Copper - (inventory.Copper * PLAYER_PUNISHIMENT))
+            inventory.Wood = math.floor(inventory.Wood - (inventory.Wood * PLAYER_PUNISHIMENT))
+            print(inventory)
+        
+            PlayerModule.SetHunger(player, 100)
+        end
+
+        HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
 
         wait(CORE_LOOP_INTERVAL)
     end

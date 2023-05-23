@@ -3,7 +3,7 @@ local Players = game:GetService("Players")
 local RP  = game:GetService("ReplicatedStorage")
 
 --Members
-local MiningUiUpdate:RemoteEvent = RP.network.MiningUiUpdate
+local PlayerInventoryUpdate:RemoteEvent = RP.network.PlayerInventoryUpdate
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local Hud = PlayerGui:WaitForChild("HUD")
 local leftBar:Frame = Hud:WaitForChild("leftBar")
@@ -49,10 +49,10 @@ InventoryButton.MouseButton1Click:Connect(function()
     end
 end)
 
-MiningUiUpdate.OnClientEvent:Connect(function(inventory:table)
+PlayerInventoryUpdate.OnClientEvent:Connect(function(inventory:table)
 
     StoneNumberLabel.Text = inventory.Stone and inventory.Stone or 0
-    CopperNumberLabel.Text = inventory.Cooper and inventory.Cooper or 0
+    CopperNumberLabel.Text = inventory.Copper and inventory.Copper or 0
     WoodNumberLabel.Text = inventory.Wood and inventory.Wood or 0
 
 end)

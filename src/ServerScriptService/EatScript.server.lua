@@ -8,7 +8,7 @@ local EATOBJECT = "Eat"
 local HungerUiUpdate = RP.network.HungerUiUpdate
 
 --Members
-local PlayerModule = require(SS.modules.PlayerModules)
+local PlayerModule = require(RP.modules.PlayerModules)
 
 
 local function onSoundEat()

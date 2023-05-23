@@ -10,7 +10,7 @@ local Hud = PlayerGui:WaitForChild("HUD")
 local leftBar:Frame = Hud:WaitForChild("leftBar")
 local hungerUi:Frame = leftBar:WaitForChild("hungerUi")
 local hungerBar:Frame = hungerUi:WaitForChild("foodBar")
-local hungerPorcent:TextLabel = hungerUi:WaitForChild("hungerPorcent")
+local hungerPorcent:TextLabel = hungerBar:WaitForChild("hungerPorcent")
 
 --Constants
 

@@ -13,11 +13,16 @@ local database = DataStoreService:GetDataStore("Survival")
 local PlayerLoaded:BindableEvent = SS.BindableEvents.PlayerLoaded
 local PlayerUnloaded:BindableEvent = SS.BindableEvents.PlayerUnloaded
 local HungerUiUpdate:RemoteEvent =  RP.network.HungerUiUpdate
-local MiningUiUpdate:RemoteEvent = RP.network.MiningUiUpdate
+local PlayerInventoryUpdate:RemoteEvent = RP.network.PlayerInventoryUpdate
+local PlayerLevelUp:RemoteEvent = RP.network.PlayerLevelUp
 
 local PLAYER_DATA_DEFAULT = {
     hunger = 100,
-    inventory = {},
+    inventory = { 
+        Stone = 0,
+        Copper = 0,
+        Wood = 0
+    },
     level = 1
 }
 
@@ -34,6 +39,15 @@ local function hungerRegularize(hunger:number)
     end
 
     return hunger
+end
+
+
+function PlayerModule.GetLevel(player)
+    return playerCached[player.UserId].level
+end
+
+function PlayerModule.SetLevel(player:Player, level:number)
+    playerCached[player.UserId].level = level
 end
 
 function PlayerModule.SetHunger(player:Player, hunger:number)
@@ -79,10 +93,14 @@ local function onPlayerAdded(player:Player)
         playerCached[player.UserId] = data
 
         --Player Loaded
+        print(playerCached[player.UserId])
+
         HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
-        MiningUiUpdate:FireClient(player, PlayerModule.GetInventory(player))
-        
+        PlayerInventoryUpdate:FireClient(player, PlayerModule.GetInventory(player))
+        PlayerLevelUp:FireClient(player, PlayerModule.GetLevel(player) )
+
         PlayerLoaded:Fire(player)
+
 
     end)
 end

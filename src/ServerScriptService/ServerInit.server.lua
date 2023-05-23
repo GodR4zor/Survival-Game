@@ -3,7 +3,8 @@
 --Services
 local Players = game:GetService("Players")
 local SS = game:GetService("ServerStorage")
-local PlayerModule = require(SS.modules.PlayerModules)
+local RP = game:GetService("ReplicatedStorage")
+local PlayerModule = require(RP.modules.PlayerModules)
 
 
 
