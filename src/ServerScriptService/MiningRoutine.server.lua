@@ -47,7 +47,7 @@ local function onPromptTrigered(promptObject:ProximityPrompt, player)
 
     miningModel:Destroy()
 
-    delay(5, function()
+    delay(10, function()
         print("Cheguei Aqui!")
         miningClone.Parent = miningFolder
         miningClone.PrimaryPart.CFrame = miningCFrame

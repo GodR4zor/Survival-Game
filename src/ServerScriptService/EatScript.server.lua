@@ -32,7 +32,10 @@ local function onPromptTrigered(promptObject:ProximityPrompt, player)
         return
     end
     
-    local foodModel = promptObject.Parent
+    local foodModel:Model = promptObject.Parent
+    local foodFolder = foodModel.Parent
+   -- local foodPosition = foodModel.Position
+    local foodClone = foodModel:Clone()
     local foodValue = foodModel.foodValue.Value
 
     onSoundEat()
@@ -44,6 +47,10 @@ local function onPromptTrigered(promptObject:ProximityPrompt, player)
     HungerUiUpdate:FireClient(player, PlayerModule.GetHunger(player))
 
     foodModel:Destroy()
+
+    delay(6, function()
+        foodClone.Parent = foodFolder
+    end)
     
 end
 
