@@ -10,7 +10,7 @@ local Hud = PlayerGui:WaitForChild("HUD")
 local leftBar:Frame = Hud:WaitForChild("leftBar")
 local hungerUi:Frame = leftBar:WaitForChild("hungerUi")
 local hungerBar:Frame = hungerUi:WaitForChild("foodBar")
-local hungerPorcent:TextLabel = hungerBar:WaitForChild("hungerPorcent")
+local hungerPorcent:TextLabel = hungerUi:WaitForChild("hungerPorcent")
 
 --Constants
 
@@ -22,7 +22,7 @@ local BAR_LOW_COLLOR:Color3 = Color3.fromRGB(211, 3, 13)
 HungerUiUpdate.OnClientEvent:Connect(function(hunger:number)
     hungerBar.Size = UDim2.fromScale(hunger/100, hungerBar.Size.Y.Scale)
 
-    hungerPorcent.Text = hunger
+    hungerPorcent.Text = ("%d%%"):format(hunger)
 
     if hungerBar.Size.X.Scale > 0.66 then
         hungerBar.BackgroundColor3 = BAR_FULL_COLLOR
